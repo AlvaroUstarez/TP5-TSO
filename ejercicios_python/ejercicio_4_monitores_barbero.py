@@ -117,8 +117,7 @@ class BarberiaMonitor:
         with self.lock:
             self.corte_terminado = True
             self.cond_corte.notify()
-            # Espera a que el cliente se baje del sillón
-            while self.silla_barbero_ocupada:
+            while self.corte_terminado:
                 self.cond_barbero.wait()
 
     def cerrar_barberia(self):
