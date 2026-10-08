@@ -60,23 +60,20 @@ def filosofo(id, rondas=3):
         tenedor_izq = id
         tenedor_der = (id + 1) % NUM_FILOSOFOS
         
-        # =========================================================================
-        # INICIO TODO: Implementar adquisición y liberación segura de tenedores
-        # =========================================================================
-        
-        # PISTA DE IMPLEMENTACIÓN ASIMÉTRICA:
-        if id == NUM_FILOSOFOS - 1:
+        if id == NUM_FILOSOFOS - 1 or id % 2 == 1:
             primero, segundo = tenedor_der, tenedor_izq
         else:
             primero, segundo = tenedor_izq, tenedor_der
-            
-        with tenedores[primero]:
-            with tenedores[segundo]:
+
+        tenedores[primero].acquire()
+        try:
+            tenedores[segundo].acquire()
+            try:
                 comer(id)
-                
-        # =========================================================================
-        # FIN TODO
-        # =========================================================================
+            finally:
+                tenedores[segundo].release()
+        finally:
+            tenedores[primero].release()
 
 if __name__ == "__main__":
     print("=" * 60)

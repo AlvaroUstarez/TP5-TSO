@@ -29,26 +29,40 @@ X = 199
 
 # TODO PARA EL ESTUDIANTE:
 # 1. Define los mecanismos de sincronización necesarios:
-sem_A = threading.Semaphore(1)
-sem_B = threading.Semaphore(0)
+# sem_A = threading.Semaphore(1)
+# sem_B = threading.Semaphore(0)
+
+sem_orden_AB = threading.Semaphore(0)
+
+#def proceso_A():
+    # global X
+    # # TODO: Esperar señal si corresponde
+    # sem_A.acquire()
+    # X = X + 1
+    # print(f"[Parte 1] Proceso A: X = {X}")
+    # # TODO: Señalizar al siguiente si corresponde
+    # sem_B.release()
 
 def proceso_A():
-    global X
-    # TODO: Esperar señal si corresponde
-    sem_A.acquire()
-    X = X + 1
-    print(f"[Parte 1] Proceso A: X = {X}")
-    # TODO: Señalizar al siguiente si corresponde
-    sem_B.release()
+        global X
+        X = X + 1
+        print(f"[Parte 1] Proceso A: X = {X}")
+        sem_orden_AB.release()
+
+# def proceso_B():
+#     global X
+#     # TODO: Esperar señal si corresponde
+#     sem_B.acquire()
+#     X = X // 10
+#     print(f"[Parte 1] Proceso B: X = {X}")
+#     # TODO: Señalizar al siguiente si corresponde
+#     sem_A.release()
 
 def proceso_B():
     global X
-    # TODO: Esperar señal si corresponde
-    sem_B.acquire()
+    sem_orden_AB.acquire()
     X = X // 10
     print(f"[Parte 1] Proceso B: X = {X}")
-    # TODO: Señalizar al siguiente si corresponde
-    sem_A.release()
 
 
 # ============================================================================
@@ -106,4 +120,3 @@ if __name__ == "__main__":
     tC = threading.Thread(target=proceso_receptor_C)
     tA.start(); tB.start(); tC.start()
     tA.join(); tB.join(); tC.join()
-    pass
